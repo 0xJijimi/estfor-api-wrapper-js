@@ -67,7 +67,3 @@ npm install
 # Build the project
 npm run build
 ```
-
-## License
-
-MIT 
