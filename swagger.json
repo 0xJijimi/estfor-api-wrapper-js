@@ -1,0 +1,3538 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Estfor API",
+    "description": ""
+  },
+  "host": "localhost:4004",
+  "basePath": "",
+  "tags": [
+    {
+      "name": "Actions",
+      "description": "Available actions that a hero can queue in a 24 hour period, as well as passive and instant actions"
+    },
+    {
+      "name": "Players",
+      "description": "Stats and information relating to Estfor heroes"
+    },
+    {
+      "name": "Clans",
+      "description": "Stats and information relating to Estfor Clans"
+    },
+    {
+      "name": "Sales",
+      "description": "Order, sales, and shop market stats and information"
+    },
+    {
+      "name": "Global",
+      "description": "General global data of everything going on in Estfor"
+    },
+    {
+      "name": "Pets",
+      "description": "Stats and information relating to Estfor Pets that aid Heroes in battle"
+    },
+    {
+      "name": "Donations",
+      "description": "Stats and information relating to the Wishing Well"
+    }
+  ],
+  "schemes": [
+    "http"
+  ],
+  "securityDefinitions": {},
+  "paths": {
+    "/action-choices/{actionId}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Choices for actions with consumable items",
+        "description": "Action choices relate to actions with specific item inputs like Smithing, Crafting, Fletching, etc.",
+        "parameters": [
+          {
+            "name": "actionId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Action Id of the action (values can be found in Estfor Definitions https://github.com/PaintSwap/estfor-definitions/blob/main/src/constants.ts#L1219). Example 1100 for Smithing"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default choiceId. Example values: id choiceId actionId outputTokenId outputAmount successPercent skill rate xpPerHour isFullModeOnly handItemTokenIdRangeMin handItemTokenIdRangeMax isAvailable",
+            "type": "string"
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "description": "If true will only return available action choices, ignore to return all",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/actions/": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "All available actions for Estfor heroes that relate to the 24 hour queue",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id actionId actionChoiceRequired skill xpPerHour numSpawn minXP isAvailable isDynamic guaranteedRewardItemTokenIds guaranteedRewardRates randomChanceItemTokenIds randomChanceRates handItemTokenIdRangeMin handItemTokenIdRangeMax health magic magicDefence melee meleeDefence randomChanceItemTokenIds randomChanceRates ranged rangedDefence successPercent isFullModeOnly worldLocation",
+            "type": "string"
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "description": "If true will only return available actions, ignore to return all",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Specific action for Estfor heroes that relate to the 24 hour queue",
+        "description": "Use /actions to get all available actions and the id of the action you want to get more information about.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Action Id of the action (values can be found in Estfor Definitions https://github.com/PaintSwap/estfor-definitions/blob/main/src/constants.ts#L1219). Example 1 for Woodcutting Logs",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/activities/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get journal entries (can take time to load, use the filters)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "activityTypesToSkip",
+            "in": "query",
+            "description": "Array of activity types to skip",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "activityTypesToInclude",
+            "in": "query",
+            "description": "Array of activity types to include",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search with player ID",
+            "type": "string"
+          },
+          {
+            "name": "userAddress",
+            "in": "query",
+            "description": "Search with user’s wallet address",
+            "type": "string"
+          },
+          {
+            "name": "activityType",
+            "in": "query",
+            "description": "Filter on a specific activity type",
+            "type": "string"
+          },
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Filter activities by block number",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true, the response will return a simplified version of the activities",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, activityId, blockNumber, type, uniqueTransactionId, user",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/activities/{userAddress}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get journal entries for a user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userAddress",
+            "in": "path",
+            "description": "Search with user’s wallet address",
+            "type": "string",
+            "required": true
+          },
+          {
+            "name": "activityTypesToSkip",
+            "in": "query",
+            "description": "Array of activity types to skip",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "activityTypesToInclude",
+            "in": "query",
+            "description": "Array of activity types to include",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search with player ID",
+            "type": "string"
+          },
+          {
+            "name": "activityType",
+            "in": "query",
+            "description": "Filter on a specific activity type",
+            "type": "string"
+          },
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Filter activities by block number",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true, the response will return a simplified version of the activities",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, activityId, blockNumber, type, uniqueTransactionId, user",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/avatars/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get all avatars available in the game",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/items/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get item details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many items will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, tokenId, melee, magic, ranged, meleeDefence, magicDefence, minXP, rangedDefence, health, totalQuantity, equipPosition, healthRestored, skill, boostType, boostValue, boostDuration, isFullModeOnly",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "description": "Item tokenIds to fetch",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "tokenIds_ge",
+            "in": "query",
+            "description": "Item tokenIds greater or equal to (must be used with tokenIds_le and less than 1000 range)",
+            "type": "string"
+          },
+          {
+            "name": "tokenIds_le",
+            "in": "query",
+            "description": "Item tokenIds less or equal to (must be used with tokenIds_ge and less than 1000 range)",
+            "type": "string"
+          },
+          {
+            "name": "isSellableToShop",
+            "in": "query",
+            "description": "Item is sellable to shop",
+            "type": "boolean"
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "description": "If true will only return available action choices, ignore to return all",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/items/{id}": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get specific item details by token id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/players/multi": {
+      "post": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of all players by owner",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Owner addresses",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "owners": {
+                  "type": "array",
+                  "example": [
+                    "0x1234567890",
+                    "0x9876543210"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, tokenId, avatarId, name, lowercaseName, owner, isActive, totalDonated, meleeXP, rangedXP, defenceXP, magicXP, healthXP, miningXP, smithingXP, woodcuttingXP, firemakingXP, cookingXP, craftingXP, fishingXP, thievingXP, fletchingXP, forgingXP alchemyXP, agilityXP, totalXP, numActivities, boostVal, boostType, boostDuration, boostStartTime, boostItemTokenId, pendingRandomRewards, lastTimestamp, mintedNumber, mintedTimestamp, meleeRank, defenceRank, magicRank, rangedRank, healthRank, miningRank, smithingRank, woodcuttingRank, firemakingRank, fletchingRank, forgingRank, alchemyRank, agilityRank, farmingRank, combinedRank, discord, twitter, telegram",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true will return a cut down response of the player data",
+            "type": "boolean"
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "description": "If true will only return active heroes",
+            "type": "boolean"
+          },
+          {
+            "name": "onlyFullMode",
+            "in": "query",
+            "description": "If true will only return evolved heroes",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/players/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of all players",
+        "description": "",
+        "parameters": [
+          {
+            "name": "names",
+            "in": "query",
+            "description": "Names of heroes. Case insensitive",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "description": "Single or an Array of tokenIds. eg tokenIds[]=1&tokenIds[]=2",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "avatarIds",
+            "in": "query",
+            "description": "Single or an Array of avatarIds. eg avatarIds[]=1&avatarIds[]=2",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, tokenId, avatarId, name, lowercaseName, owner, isActive, totalDonated, meleeXP, rangedXP, defenceXP, magicXP, healthXP, miningXP, smithingXP, woodcuttingXP, firemakingXP, cookingXP, craftingXP, fishingXP, thievingXP, fletchingXP, forgingXP alchemyXP, agilityXP, totalXP, numActivities, boostVal, boostType, boostDuration, boostStartTime, boostItemTokenId, pendingRandomRewards, lastTimestamp, mintedNumber, mintedTimestamp, meleeRank, defenceRank, magicRank, rangedRank, healthRank, miningRank, smithingRank, woodcuttingRank, firemakingRank, fletchingRank, forgingRank, alchemyRank, agilityRank, farmingRank, combinedRank, discord, twitter, telegram",
+            "type": "string"
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "description": "Search for players which have this owner",
+            "type": "string"
+          },
+          {
+            "name": "exactName",
+            "in": "query",
+            "description": "Search for this exact name. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search if name contains this value. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true will return a cut down response of the player data",
+            "type": "boolean"
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "description": "If true will only return active heroes",
+            "type": "boolean"
+          },
+          {
+            "name": "onlyFullMode",
+            "in": "query",
+            "description": "If true will only return evolved heroes",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/players/{id}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of a specific player",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Player Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/queued-actions/multi": {
+      "post": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get all queued actions (past and present)",
+        "description": "Can be filtered by playerId to make the response more specific",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Player Ids",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "playerIds": {
+                  "type": "array",
+                  "example": [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "isActive",
+            "in": "query",
+            "description": "If true will only return active heroes",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default queueId. Example values: id queueId playerId actionId skill combatStyle regenerateId rightHandEquipmentTokenId leftHandEquipmentTokenId startTime timespan headEquipped neckEquipped bodyEquipped armsEquipped legsEquipped feetEquipped ringEquipped isValid isActive originalStartTime originalTimespan",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/queued-actions/": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get all queued actions (past and present)",
+        "description": "Can be filtered by playerId to make the response more specific",
+        "parameters": [
+          {
+            "name": "isActive",
+            "in": "query",
+            "description": "If true will only return active heroes",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default queueId. Example values: id queueId playerId actionId skill combatStyle regenerateId rightHandEquipmentTokenId leftHandEquipmentTokenId startTime timespan headEquipped neckEquipped bodyEquipped armsEquipped legsEquipped feetEquipped ringEquipped isValid isActive originalStartTime originalTimespan",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search for queued actions by playerId",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/shop-items/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get all shop items available in the game",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many shop items will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, tokenId, price",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/shop-items/{id}": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get details of a specific shop item by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Item Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user-item-nfts/multi": {
+      "post": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get items owned by a user address",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "User addresses",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userAddresses": {
+                  "type": "array",
+                  "example": [
+                    "0x1234567890",
+                    "0x9876543210"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "description": "Array of item token ids to filter by",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default tokenId. Example values: id, amount, selfMade, tokenId, user",
+            "type": "string"
+          },
+          {
+            "name": "equipPosition",
+            "in": "query",
+            "description": "The equipment position number to filter by. Example: 1 for head",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/user-item-nfts/{userAddress}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get items owned by a user address",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userAddress",
+            "in": "path",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "tokenIds",
+            "in": "query",
+            "description": "Array of item token ids to filter by",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default tokenId. Example values: id, amount, selfMade, tokenId, user",
+            "type": "string"
+          },
+          {
+            "name": "equipPosition",
+            "in": "query",
+            "description": "The equipment position number to filter by. Example: 1 for head",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/player-self-mades/multi": {
+      "post": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get self made items held by a specific player",
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "description": "Player Ids",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "playerIds": {
+                  "type": "array",
+                  "example": [
+                    "1",
+                    "2",
+                    "3"
+                  ],
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default lastUpdatedTimestamp. Example values: id, playerId, createdTimestamp, lastUpdatedTimestamp, actionCompletedNum1, actionCompletedNum2, actionCompletedCompletedNum, burnCompletedAmount, completed",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/player-self-mades/{playerId}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get self-made items by a specific player",
+        "description": "",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Player Id"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/last-full-equipments/{userAddress}/{playerId}/{skill}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of the equipment last worn by a player",
+        "description": "",
+        "parameters": [
+          {
+            "name": "userAddress",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Address of the user"
+          },
+          {
+            "name": "playerId",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id of the player whose equipment you want to fetch"
+          },
+          {
+            "name": "skill",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Number of the skill (https://github.com/PaintSwap/estfor-definitions/blob/main/src/types.ts#L15). Example 1 is Combat"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get all user details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, numActivities, numUniqueItems, numPlayers, numPlayersDonated, numPets, totalBought, totalSold, totalDonated",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/users/{address}": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get user details by address",
+        "description": "",
+        "parameters": [
+          {
+            "name": "address",
+            "in": "path",
+            "description": "Address of the user",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/xp-threshold-rewards/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get level xp thresholds",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many threshold rewards will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default xp. Example values: id, rewardItemAmounts, rewardItemTokenIds, xp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/random-words/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get random words used by the oracle to generate random numbers for action loot (NOT instant VRF actions though)",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/player-day-datas/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get player day datas like the number of players active, evolved players active, etc.",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default date. Example values: id, date, playersActive, evolvedPlayersActive",
+            "type": "string"
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "description": "Beginning date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "description": "End date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/donation-day-datas/": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get donation day data",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the donation data will be ordered in. Default date. Example values: id, date, totalDonated, numDonators, numLotteryEntries",
+            "type": "string"
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "description": "Beginning date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "description": "End date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clans/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get clan details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "bankAddress",
+            "in": "query",
+            "description": "Search for the clan with this bank address",
+            "type": "string"
+          },
+          {
+            "name": "ownerId",
+            "in": "query",
+            "description": "Search for the clan with this owner Id",
+            "type": "string"
+          },
+          {
+            "name": "exactName",
+            "in": "query",
+            "description": "Search for this exact name. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search if name contains this value. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many clans will be returned in the response. Default 100",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default createdTimestamp. Example values: id, clanId, ownerId, name, imageId, tierId, createdTimestamp, memberCount, bankAddress, totalLevel, totalDonated, lastDonationThreshold, nextDonationThresholdRewardItemTokenId, numDonationsToday, boostDuration, boostItemTokenId, boostType, boostStartTime, boostVal",
+            "type": "string"
+          },
+          {
+            "name": "tierIds",
+            "in": "query",
+            "description": "Filter by tier IDs",
+            "type": "array",
+            "collectionFormat": "multi"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true will return a cut down response of the clan data",
+            "type": "boolean"
+          },
+          {
+            "name": "onlyHasVaults",
+            "in": "query",
+            "description": "If true will return only clans with vaults",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clans/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get specific clan details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Clan Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-members/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get all clan members",
+        "description": "",
+        "parameters": [
+          {
+            "name": "clanId",
+            "in": "query",
+            "description": "Search for the members of a clan with this id",
+            "type": "string"
+          },
+          {
+            "name": "requestedClanId",
+            "in": "query",
+            "description": "Search for players who have requested to join a clan with this id",
+            "type": "string"
+          },
+          {
+            "name": "playerOwner",
+            "in": "query",
+            "description": "Search for clan members with this address",
+            "type": "string"
+          },
+          {
+            "name": "rank",
+            "in": "query",
+            "description": "Search for clan members with this rank. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "playerName",
+            "in": "query",
+            "description": "Search if clan member name contains this value. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "includePlayerRanks",
+            "in": "query",
+            "description": "If true will return player ranks in the response. Default false",
+            "type": "boolean"
+          },
+          {
+            "name": "onlyFullMode",
+            "in": "query",
+            "description": "If true will only return evolved clan members",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many clan members will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default joinedTimestamp. Example values: id, joinedTimestamp, rank",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-members/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get individual clan member details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Clan Member Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-invites/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get all invites for a clan or from a player",
+        "description": "",
+        "parameters": [
+          {
+            "name": "clanId",
+            "in": "query",
+            "description": "Search for the invites of a clan with this id",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search for the invites for a player with this id",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default invitedTimestamp. Example values: id, invitedTimestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-tiers/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get clan tier information",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default price. Example values: id, maxMemberCapacity, maxBankCapacity, maxImageId, price, minimumAge",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-tiers/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get clan tier information by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Tier Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clans-within-vault-mmr-attacking-range/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get clan ids for vaults which are attackable from this clan",
+        "description": "Does not take into account other cooldowns like reattacks.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "query",
+            "required": true,
+            "type": "string",
+            "description": "Clan Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quests/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get details of all quests available in the game",
+        "description": "",
+        "parameters": [
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "The player Id to fetch quests for",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many quests will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default questId. Example values: id, questId, actionNum, actionNum1, actionChoiceNum, skillReward, skillXPGained, rewardAmount, rewardAmount1, burnAmount, isActive, isFixed, createdTimestamp, minRequirementSkills, minRequirementXPs",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/quests/{id}": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get details of a specific quest",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Quest Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/player-quests/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of the quests a player has completed",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "completed",
+            "in": "query",
+            "description": "If true, only returns completed quests",
+            "type": "boolean"
+          },
+          {
+            "name": "questId",
+            "in": "query",
+            "description": "Id of the quest to search for",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default lastUpdatedTimestamp. Example values: id, playerId, createdTimestamp, lastUpdatedTimestamp, actionCompletedNum1, actionCompletedNum2, actionCompletedCompletedNum, burnCompletedAmount, completed",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search for quests by playerId",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/core-data/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get core data statistics for the game",
+        "description": "",
+        "parameters": [
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Get core data at this block number",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/donations/": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get donations by player or user address, or by name",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search for the name of the players character. useUsers must be false for this to work",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Finds the donations of a user address. useUsers must be true for this to work",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search for the player id. useUsers must be false for this to work",
+            "type": "string"
+          },
+          {
+            "name": "owner",
+            "in": "query",
+            "description": "Finds the player owner’s address. useUsers must be false for this to work",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default lastUpdatedTimestamp. Example values: id, user, amount, lastDonatedAmount, lastUpdatedTimestamp",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true will return a cut down response of the player data",
+            "type": "boolean"
+          },
+          {
+            "name": "onlyFullMode",
+            "in": "query",
+            "description": "If true will return only data related to evolved heroes",
+            "type": "boolean"
+          },
+          {
+            "name": "useUsers",
+            "in": "query",
+            "description": "Whether to return user or player donations",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lotteries/": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get lotteries",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, raffleIdWinner, hasClaimed, rewardItemTokenId, rewardAmount, timestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/lotteries/{id}": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get details of a specific lottery",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Lottery Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/raffle-entries/": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get all raffle entries",
+        "description": "",
+        "parameters": [
+          {
+            "name": "user",
+            "in": "query",
+            "description": "The user wallet address to fetch raffles for",
+            "type": "string"
+          },
+          {
+            "name": "lotteryId",
+            "in": "query",
+            "description": "The lottery id to fetch raffles for",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "The player id to fetch raffles for",
+            "type": "string"
+          },
+          {
+            "name": "raffleId",
+            "in": "query",
+            "description": "The raffle id to fetch raffles for",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many players will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, lotteryId, raffleId, playerId, user, timestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/raffle-entries/{id}": {
+      "get": {
+        "tags": [
+          "Donations"
+        ],
+        "summary": "Get specific raffle entry details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Raffle Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/first-to-reach-max-skills/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get details for the competition winners who reached max skills first",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/instant-actions/": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get all instant actions",
+        "description": "Instant actions are actions that are executed immediately such as turning Natuow Leather into Elixium",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default actionId. Example values: id, actionId, minSkills, minXPs, inputTokenIds, inputAmounts, outputTokenId, outputAmount, isFullModeOnly, actionType",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/instant-actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get an instant action",
+        "description": "Instant actions are actions that are executed immediately such as turning Natuow Leather into Elixium",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Action Id of the action (values can be found in Estfor Definitions https://github.com/PaintSwap/estfor-definitions/blob/main/src/constants.ts#L1763). Example 1 for Forging Bronze Helmet",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/promotions/{id}": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get details all promotion events that are active or upcoming (such as the Xmas advent calendar)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Promotion Id"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/player-promotions/": {
+      "get": {
+        "tags": [
+          "Players"
+        ],
+        "summary": "Get details of promotion events for a player (like the Xmas advent calendar)",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default promotionId. Example values: id, promotionId, itemTokenIds, amounts, days",
+            "type": "string"
+          },
+          {
+            "name": "playerId",
+            "in": "query",
+            "description": "Search for player promotion by playerId",
+            "type": "string"
+          },
+          {
+            "name": "promotionId",
+            "in": "query",
+            "description": "Search for player promotion by promotiomId",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/territories/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get all territory details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many territories will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default territoryId. Example values: id, territoryId, percentEmissions, unclaimedEmissions, nextHarvestAllowedTimestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/territories/{id}": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get territory details by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Territory Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-battles/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get clan battles",
+        "description": "",
+        "parameters": [
+          {
+            "name": "attackingClanId",
+            "in": "query",
+            "description": "Search for battles where the attacking clan has this id",
+            "type": "string"
+          },
+          {
+            "name": "defendingClanId",
+            "in": "query",
+            "description": "Search for battles where the defending clan has this id",
+            "type": "string"
+          },
+          {
+            "name": "clanBattleType",
+            "in": "query",
+            "description": "Search for battles only of this type - TERRITORY for Territory, LOCKED_VAULT for Locked Vaults",
+            "type": "string"
+          },
+          {
+            "name": "simplified",
+            "in": "query",
+            "description": "If true will return a cut down response of the battle data",
+            "type": "boolean"
+          },
+          {
+            "name": "didAttackersWin",
+            "in": "query",
+            "description": "If true will return battles where the attackers won",
+            "type": "boolean"
+          },
+          {
+            "name": "useDisjunctionClanIds",
+            "in": "query",
+            "description": "If true will return battles where the attackingClanId or defendingClanId matches the provided ids (i.e. OR instead of AND)",
+            "type": "boolean"
+          },
+          {
+            "name": "ongoing",
+            "in": "query",
+            "description": "If true will return battles that are ongoing",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many battles will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, requestId, attackingPlayerIds, defendingPlayerIds, attackingRolls, defendingRolls, battleResults, randomSkills, didAttackersWin, randomWords, attackingTimestamp, ongoing, type, brushWon, oracleHash",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/clan-battles/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get specific clan battle",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Battle Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/locked-bank-vault-clan-battle-pairs/": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get locked bank vault battle details",
+        "description": "",
+        "parameters": [
+          {
+            "name": "attackingClanId",
+            "in": "query",
+            "description": "Search for the locked vault battles of an attacking clan with this id",
+            "type": "string"
+          },
+          {
+            "name": "attackingCooldownTimestamp_gt",
+            "in": "query",
+            "description": "Search for the locked vault battles where the attacking cooldown timestamp is greater than this value. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many locked vaults will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, attackingCooldownTimestamp, reattacksMadeWithinTimestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/locked-bank-vault-clan-battle-pairs/{id}": {
+      "get": {
+        "tags": [
+          "Clans"
+        ],
+        "summary": "Get details of a specific locked vault battle",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Battle Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/orders/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get all orders",
+        "description": "",
+        "parameters": [
+          {
+            "name": "minAmountRemaining",
+            "in": "query",
+            "description": "Search for orders that have a minimum amount remaining",
+            "type": "string"
+          },
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Search for orders that match the specified block number",
+            "type": "string"
+          },
+          {
+            "name": "tokenId",
+            "in": "query",
+            "description": "Search for orders that match the specified tokenId",
+            "type": "string"
+          },
+          {
+            "name": "maker",
+            "in": "query",
+            "description": "Search for orders that match the specified address",
+            "type": "boolean"
+          },
+          {
+            "name": "side",
+            "in": "query",
+            "description": "buy or sell for the side of the order",
+            "type": "string"
+          },
+          {
+            "name": "claimable",
+            "in": "query",
+            "description": "If true will return only orders that are claimable",
+            "type": "boolean"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many orders will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, nftAddress, tokenId, amount, amountRemaining, price, isBuyOrder, maker, claimable, tokenAmountClaimable, nftAmountClaimable, timestamp, blockNumber, hash, lastTradedTimestamp, lastTradedBlockNumber",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/failed-orders/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get failed orders",
+        "description": "",
+        "parameters": [
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Search for orders that match the specified block number",
+            "type": "string"
+          },
+          {
+            "name": "tokenId",
+            "in": "query",
+            "description": "Search for orders that match the specified tokenId",
+            "type": "string"
+          },
+          {
+            "name": "maker",
+            "in": "query",
+            "description": "Search for orders that match the specified address",
+            "type": "boolean"
+          },
+          {
+            "name": "side",
+            "in": "query",
+            "description": "buy or sell for the side of the order",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many orders will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, nftAddress, tokenId, amount, amountRemaining, price, isBuyOrder, maker, timestamp, blockNumber",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/price-levels/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get price levels for a token",
+        "description": "",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "in": "query",
+            "description": "Search for price levels that match the specified tokenId",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "side",
+            "in": "query",
+            "description": "buy or sell for the side of the order",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many price levels will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, nftAddress, tokenId, price, totalAmount, totalOrders, isBuyOrder",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/token-infos/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get order book token top level sales info",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many tokens will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, nftAddress, tokenId, tick, minQuantity, lastTradedPrice, lastTradedQuantity, lastTradedTimestamp, lastTradedWasBuy",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/sale-histories/": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get sales history of a token or user",
+        "description": "",
+        "parameters": [
+          {
+            "name": "block",
+            "in": "query",
+            "description": "Search for sales that match the specified block number",
+            "type": "string"
+          },
+          {
+            "name": "tokenId",
+            "in": "query",
+            "description": "Search for sales that match the specified tokenId",
+            "type": "string"
+          },
+          {
+            "name": "user",
+            "in": "query",
+            "description": "Search for sales that match the specified address",
+            "type": "boolean"
+          },
+          {
+            "name": "side",
+            "in": "query",
+            "description": "buy or sell for the side of the order",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many sales will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, nftAddress, tokenId, amount, price, isBuyOrder, maker, taker, timestamp, blockNumber, hash",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/order-book-day-datas/{tokenId}": {
+      "get": {
+        "tags": [
+          "Sales"
+        ],
+        "summary": "Get an item order book day data",
+        "description": "",
+        "parameters": [
+          {
+            "name": "tokenId",
+            "in": "path",
+            "description": "Token Id",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "dateFrom",
+            "in": "query",
+            "description": "Beginning date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          },
+          {
+            "name": "dateTo",
+            "in": "query",
+            "description": "End date in number of seconds since 1970 (UNIX). Default now. Example values: 1717200000 for 1st June 2024",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many orders will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default date. Example values: id, tokenId, date, averagePrice",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/instant-vrf-actions/": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get all instant VRF actions",
+        "description": "Instant VRF actions are actions that are executed immediately but have a randomness component such as hatching an egg or opening a chest",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, actionId, inputTokenIds, inputAmounts, isFullModeOnly, actionType",
+            "type": "string"
+          },
+          {
+            "name": "actionType",
+            "in": "query",
+            "description": "The action type of the VRF action. Example values: GENERIC, FORGING, EGG",
+            "type": "string"
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "description": "If true will only return available actions, ignore to return all",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/instant-vrf-actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get an instant VRF action",
+        "description": "Instant VRF actions are actions that are executed immediately but have a randomness component such as hatching an egg or opening a chest",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Action Id of the action (values can be found in Estfor Definitions https://github.com/PaintSwap/estfor-definitions/blob/main/src/constants.ts#L2076). Example 1 for Forging Orichalcum Helmet",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/queued-instant-vrf-actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get queued instant VRF action by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id of the action"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/base-pets/": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get all basePets available in the game",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many base pets will be returned in the response. Default 100",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default timestamp. Example values: id, baseId, description, tier, skin, enhancementType, skillEnhancements, skillMinLevels, fixedStarThreshold, percentageStarThreshold",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/base-pets/{id}": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get basePet details by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Base Pet Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pets/": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get details of all pets",
+        "description": "",
+        "parameters": [
+          {
+            "name": "owner",
+            "in": "query",
+            "description": "Search for pets which have this owner",
+            "type": "string"
+          },
+          {
+            "name": "exactName",
+            "in": "query",
+            "description": "Search for this exact name. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "description": "Search if name contains this value. Case insensitive",
+            "type": "string"
+          },
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many pets will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, tokenId, owner, name, lowercaseName, skillFixedEnhancements, skillPercentageEnhancements, timestamp",
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/pets/{id}": {
+      "get": {
+        "tags": [
+          "Pets"
+        ],
+        "summary": "Get details of a specific pet",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Pet Id",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/passive-actions/": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "All available passive actions for Estfor heroes that relate to the longer passive queue",
+        "description": "",
+        "parameters": [
+          {
+            "name": "orderDirection",
+            "in": "query",
+            "description": "Sort order direction (desc or asc)",
+            "type": "string"
+          },
+          {
+            "name": "numToSkip",
+            "in": "query",
+            "description": "This is for pagination functionality when you want to skip a certain number from the list. Default 0",
+            "type": "string"
+          },
+          {
+            "name": "numToFetch",
+            "in": "query",
+            "description": "How many actions will be returned in the response. Default 1000",
+            "type": "string"
+          },
+          {
+            "name": "orderBy",
+            "in": "query",
+            "description": "The property which the value will be ordered in. Default id. Example values: id, actionId, inputTokenIds, inputAmounts, isFullModeOnly, durationDays, guaranteedRewardItemTokenIds, guaranteedRewardRates, minLevels, minSkills, randomChanceAmounts, randomChanceItemTokenIds, randomChanceRates, skipSuccessPercent, worldLocation",
+            "type": "string"
+          },
+          {
+            "name": "isAvailable",
+            "in": "query",
+            "description": "If true will only return available actions, ignore to return all",
+            "type": "boolean"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/passive-actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Specific passive action for Estfor heroes that relate to the longer passive queue",
+        "description": "Use /passive-actions to get all available passive actions and the id of the action you want to get more information about.",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Action Id of the action (values can be found in Estfor Definitions https://github.com/PaintSwap/estfor-definitions/blob/main/src/constants.ts#L2531). Example 1 for creating Genesis Egg Tier 1",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "422": {
+            "description": "Unprocessable Entity"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/queued-passive-actions/{id}": {
+      "get": {
+        "tags": [
+          "Actions"
+        ],
+        "summary": "Get queued passive action by id",
+        "description": "",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "description": "Id of the action"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/subgraph-health/": {
+      "get": {
+        "tags": [
+          "Global"
+        ],
+        "summary": "Get health of the third party subgraph that Estfor relies on for data",
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    }
+  }
+}
