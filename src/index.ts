@@ -1,4 +1,51 @@
-import type { Action } from './types';
+import type {
+  EstforApiAction,
+  EstforApiActionChoice,
+  EstforApiActivity,
+  EstforApiAvatar,
+  EstforApiBasePet,
+  EstforApiClan,
+  EstforApiClanBattle,
+  EstforApiClanInvite,
+  EstforApiClanMember,
+  EstforApiClanTier,
+  EstforApiCoreData,
+  EstforApiDonation,
+  EstforApiDonationDayData,
+  EstforApiFailedOrder,
+  EstforApiFirstToReachMaxSkills,
+  EstforApiInstantAction,
+  EstforApiInstantVrfAction,
+  EstforApiItem,
+  EstforApiLastFullEquipment,
+  EstforApiLockedBankVaultClanBattlePair,
+  EstforApiLottery,
+  EstforApiOrder,
+  EstforApiOrderBookDayData,
+  EstforApiPassiveAction,
+  EstforApiPet,
+  EstforApiPlayer,
+  EstforApiPlayerDayData,
+  EstforApiPlayerPromotion,
+  EstforApiPlayerQuest,
+  EstforApiPlayerSelfMade,
+  EstforApiPriceLevel,
+  EstforApiPromotion,
+  EstforApiQueuedInstantVrfAction,
+  EstforApiQueuedPassiveAction,
+  EstforApiQuest,
+  EstforApiRaffleEntry,
+  EstforApiRandomWord,
+  EstforApiSaleHistory,
+  EstforApiShopItem,
+  EstforApiSubgraphHealth,
+  EstforApiTerritory,
+  EstforApiTokenInfo,
+  EstforApiUser,
+  EstforApiUserItemNft,
+  EstforApiXpThresholdReward,
+  EstforApiPaginatedResponse
+} from './types';
 
 // Remove fetch polyfill for Node.js. Document in README that users must provide fetch in Node.js environments.
 
@@ -20,14 +67,25 @@ export class EstforApiClient {
     this.baseUrl = options.baseUrl || 'http://localhost:4004';
   }
 
-  // Example method stub
-  async getActions(): Promise<Action[]> {
-    const res = await fetch(`${this.baseUrl}/actions/`);
+  async getActions(params?: {
+    orderDirection?: string;
+    numToSkip?: string;
+    numToFetch?: string;
+    orderBy?: string;
+    isAvailable?: boolean;
+  }): Promise<EstforApiPaginatedResponse<EstforApiAction>> {
+    const query = params ?
+      '?' + Object.entries(params)
+        .filter(([_, v]) => v !== undefined)
+        .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(String(v))}`)
+        .join('&')
+      : '';
+    const res = await fetch(`${this.baseUrl}/actions/${query}`);
     if (!res.ok) throw new Error(`Failed to fetch actions: ${res.status}`);
     return res.json();
   }
 
-  async getActionById(id: string | number): Promise<any> {
+  async getActionById(id: string | number): Promise<EstforApiAction> {
     const res = await fetch(`${this.baseUrl}/actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch action by id: ${res.status}`);
     return res.json();
@@ -39,7 +97,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     isAvailable?: boolean;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiActionChoice>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -63,7 +121,7 @@ export class EstforApiClient {
     numToSkip?: string;
     numToFetch?: string;
     orderBy?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiActivity>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -90,7 +148,7 @@ export class EstforApiClient {
     numToSkip?: string;
     numToFetch?: string;
     orderBy?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiActivity>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -106,7 +164,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getAvatars(): Promise<any> {
+  async getAvatars(): Promise<EstforApiPaginatedResponse<EstforApiAvatar>> {
     const res = await fetch(`${this.baseUrl}/avatars/`);
     if (!res.ok) throw new Error(`Failed to fetch avatars: ${res.status}`);
     return res.json();
@@ -122,7 +180,7 @@ export class EstforApiClient {
     tokenIds_le?: string;
     isSellableToShop?: boolean;
     isAvailable?: boolean;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiItem>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -138,7 +196,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getItemById(id: string | number): Promise<any> {
+  async getItemById(id: string | number): Promise<EstforApiItem> {
     const res = await fetch(`${this.baseUrl}/items/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch item by id: ${res.status}`);
     return res.json();
@@ -151,7 +209,7 @@ export class EstforApiClient {
     orderDirection?: string;
     userAddress?: string;
     isActive?: boolean;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPlayer>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -163,13 +221,13 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getPlayerById(id: string | number): Promise<any> {
+  async getPlayerById(id: string | number): Promise<EstforApiPlayer> {
     const res = await fetch(`${this.baseUrl}/players/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch player by id: ${res.status}`);
     return res.json();
   }
 
-  async getPlayersMulti(playerIds: (string | number)[]): Promise<any> {
+  async getPlayersMulti(playerIds: (string | number)[]): Promise<EstforApiPlayer[]> {
     const res = await fetch(`${this.baseUrl}/players/multi`, {
       method: 'POST',
       headers: {
@@ -189,7 +247,7 @@ export class EstforApiClient {
     playerId?: string;
     userAddress?: string;
     isActive?: boolean;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiActivity>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -201,7 +259,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getQueuedActionsMulti(queuedActionIds: (string | number)[]): Promise<any> {
+  async getQueuedActionsMulti(queuedActionIds: (string | number)[]): Promise<EstforApiActivity[]> {
     const res = await fetch(`${this.baseUrl}/queued-actions/multi`, {
       method: 'POST',
       headers: {
@@ -220,7 +278,7 @@ export class EstforApiClient {
     orderDirection?: string;
     tokenId?: string;
     isAvailable?: boolean;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiShopItem>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -232,7 +290,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getShopItemById(id: string | number): Promise<any> {
+  async getShopItemById(id: string | number): Promise<EstforApiShopItem> {
     const res = await fetch(`${this.baseUrl}/shop-items/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch shop item by id: ${res.status}`);
     return res.json();
@@ -244,7 +302,7 @@ export class EstforApiClient {
     orderBy?: string;
     orderDirection?: string;
     tokenId?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiUserItemNft>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -256,7 +314,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getUserItemNftsMulti(userAddresses: string[]): Promise<any> {
+  async getUserItemNftsMulti(userAddresses: string[]): Promise<EstforApiUserItemNft[]> {
     const res = await fetch(`${this.baseUrl}/user-item-nfts/multi`, {
       method: 'POST',
       headers: {
@@ -273,7 +331,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPlayerSelfMade>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -285,7 +343,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getPlayerSelfMadesMulti(playerIds: (string | number)[]): Promise<any> {
+  async getPlayerSelfMadesMulti(playerIds: (string | number)[]): Promise<EstforApiPlayerSelfMade[]> {
     const res = await fetch(`${this.baseUrl}/player-self-mades/multi`, {
       method: 'POST',
       headers: {
@@ -297,7 +355,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getLastFullEquipments(userAddress: string, playerId: string | number, skill: string): Promise<any> {
+  async getLastFullEquipments(userAddress: string, playerId: string | number, skill: string): Promise<EstforApiLastFullEquipment> {
     const res = await fetch(`${this.baseUrl}/last-full-equipments/${encodeURIComponent(userAddress)}/${playerId}/${encodeURIComponent(skill)}`);
     if (!res.ok) throw new Error(`Failed to fetch last full equipments: ${res.status}`);
     return res.json();
@@ -308,7 +366,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiUser>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -320,19 +378,19 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getUserByAddress(address: string): Promise<any> {
+  async getUserByAddress(address: string): Promise<EstforApiUser> {
     const res = await fetch(`${this.baseUrl}/users/${encodeURIComponent(address)}`);
     if (!res.ok) throw new Error(`Failed to fetch user by address: ${res.status}`);
     return res.json();
   }
 
-  async getXpThresholdRewards(): Promise<any> {
+  async getXpThresholdRewards(): Promise<EstforApiPaginatedResponse<EstforApiXpThresholdReward>> {
     const res = await fetch(`${this.baseUrl}/xp-threshold-rewards/`);
     if (!res.ok) throw new Error(`Failed to fetch XP threshold rewards: ${res.status}`);
     return res.json();
   }
 
-  async getRandomWords(): Promise<any> {
+  async getRandomWords(): Promise<EstforApiPaginatedResponse<EstforApiRandomWord>> {
     const res = await fetch(`${this.baseUrl}/random-words/`);
     if (!res.ok) throw new Error(`Failed to fetch random words: ${res.status}`);
     return res.json();
@@ -344,7 +402,7 @@ export class EstforApiClient {
     orderBy?: string;
     orderDirection?: string;
     playerId?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPlayerDayData>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -361,7 +419,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiDonationDayData>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -378,7 +436,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiClan>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -390,7 +448,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getClanById(id: string | number): Promise<any> {
+  async getClanById(id: string | number): Promise<EstforApiClan> {
     const res = await fetch(`${this.baseUrl}/clans/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch clan by id: ${res.status}`);
     return res.json();
@@ -402,7 +460,7 @@ export class EstforApiClient {
     orderBy?: string;
     orderDirection?: string;
     clanId?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiClanMember>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -414,7 +472,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getClanMemberById(id: string | number): Promise<any> {
+  async getClanMemberById(id: string | number): Promise<EstforApiClanMember> {
     const res = await fetch(`${this.baseUrl}/clan-members/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch clan member by id: ${res.status}`);
     return res.json();
@@ -426,7 +484,7 @@ export class EstforApiClient {
     orderBy?: string;
     orderDirection?: string;
     clanId?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiClanInvite>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -443,7 +501,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiClanTier>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -455,13 +513,13 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getClanTierById(id: string | number): Promise<any> {
+  async getClanTierById(id: string | number): Promise<EstforApiClanTier> {
     const res = await fetch(`${this.baseUrl}/clan-tiers/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch clan tier by id: ${res.status}`);
     return res.json();
   }
 
-  async getClansWithinVaultMmrAttackingRange(id: string | number): Promise<any> {
+  async getClansWithinVaultMmrAttackingRange(id: string | number): Promise<EstforApiClan[]> {
     const res = await fetch(`${this.baseUrl}/clans-within-vault-mmr-attacking-range/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch clans within vault mmr attacking range: ${res.status}`);
     return res.json();
@@ -472,7 +530,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiQuest>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -484,7 +542,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getQuestById(id: string | number): Promise<any> {
+  async getQuestById(id: string | number): Promise<EstforApiQuest> {
     const res = await fetch(`${this.baseUrl}/quests/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch quest by id: ${res.status}`);
     return res.json();
@@ -496,7 +554,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPlayerQuest>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -508,7 +566,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getCoreData(): Promise<any> {
+  async getCoreData(): Promise<EstforApiCoreData> {
     const res = await fetch(`${this.baseUrl}/core-data/`);
     if (!res.ok) throw new Error(`Failed to fetch core data: ${res.status}`);
     return res.json();
@@ -519,7 +577,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiDonation>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -536,7 +594,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiLottery>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -548,7 +606,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getLotteryById(id: string | number): Promise<any> {
+  async getLotteryById(id: string | number): Promise<EstforApiLottery> {
     const res = await fetch(`${this.baseUrl}/lotteries/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch lottery by id: ${res.status}`);
     return res.json();
@@ -559,7 +617,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiRaffleEntry>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -571,13 +629,13 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getRaffleEntryById(id: string | number): Promise<any> {
+  async getRaffleEntryById(id: string | number): Promise<EstforApiRaffleEntry> {
     const res = await fetch(`${this.baseUrl}/raffle-entries/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch raffle entry by id: ${res.status}`);
     return res.json();
   }
 
-  async getFirstToReachMaxSkills(): Promise<any> {
+  async getFirstToReachMaxSkills(): Promise<EstforApiFirstToReachMaxSkills[]> {
     const res = await fetch(`${this.baseUrl}/first-to-reach-max-skills/`);
     if (!res.ok) throw new Error(`Failed to fetch first to reach max skills: ${res.status}`);
     return res.json();
@@ -588,7 +646,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiInstantAction>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -600,13 +658,13 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getInstantActionById(id: string | number): Promise<any> {
+  async getInstantActionById(id: string | number): Promise<EstforApiInstantAction> {
     const res = await fetch(`${this.baseUrl}/instant-actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch instant action by id: ${res.status}`);
     return res.json();
   }
 
-  async getPromotionsById(id: string | number): Promise<any> {
+  async getPromotionsById(id: string | number): Promise<EstforApiPromotion> {
     const res = await fetch(`${this.baseUrl}/promotions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch promotions by id: ${res.status}`);
     return res.json();
@@ -618,7 +676,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPlayerPromotion>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -635,7 +693,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiTerritory>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -647,7 +705,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getTerritoryById(id: string | number): Promise<any> {
+  async getTerritoryById(id: string | number): Promise<EstforApiTerritory> {
     const res = await fetch(`${this.baseUrl}/territories/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch territory by id: ${res.status}`);
     return res.json();
@@ -658,7 +716,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiClanBattle>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -670,7 +728,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getClanBattleById(id: string | number): Promise<any> {
+  async getClanBattleById(id: string | number): Promise<EstforApiClanBattle> {
     const res = await fetch(`${this.baseUrl}/clan-battles/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch clan battle by id: ${res.status}`);
     return res.json();
@@ -681,7 +739,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiLockedBankVaultClanBattlePair>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -693,7 +751,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getLockedBankVaultClanBattlePairById(id: string | number): Promise<any> {
+  async getLockedBankVaultClanBattlePairById(id: string | number): Promise<EstforApiLockedBankVaultClanBattlePair> {
     const res = await fetch(`${this.baseUrl}/locked-bank-vault-clan-battle-pairs/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch locked bank vault clan battle pair by id: ${res.status}`);
     return res.json();
@@ -704,7 +762,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiOrder>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -721,7 +779,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiFailedOrder>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -738,7 +796,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPriceLevel>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -755,7 +813,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiTokenInfo>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -772,7 +830,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiSaleHistory>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -789,7 +847,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiOrderBookDayData>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -806,7 +864,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiInstantVrfAction>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -818,13 +876,13 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getInstantVrfActionById(id: string | number): Promise<any> {
+  async getInstantVrfActionById(id: string | number): Promise<EstforApiInstantVrfAction> {
     const res = await fetch(`${this.baseUrl}/instant-vrf-actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch instant vrf action by id: ${res.status}`);
     return res.json();
   }
 
-  async getQueuedInstantVrfActionById(id: string | number): Promise<any> {
+  async getQueuedInstantVrfActionById(id: string | number): Promise<EstforApiQueuedInstantVrfAction> {
     const res = await fetch(`${this.baseUrl}/queued-instant-vrf-actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch queued instant vrf action by id: ${res.status}`);
     return res.json();
@@ -835,7 +893,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiBasePet>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -847,7 +905,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getBasePetById(id: string | number): Promise<any> {
+  async getBasePetById(id: string | number): Promise<EstforApiBasePet> {
     const res = await fetch(`${this.baseUrl}/base-pets/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch base pet by id: ${res.status}`);
     return res.json();
@@ -858,7 +916,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPet>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -870,7 +928,7 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getPetById(id: string | number): Promise<any> {
+  async getPetById(id: string | number): Promise<EstforApiPet> {
     const res = await fetch(`${this.baseUrl}/pets/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch pet by id: ${res.status}`);
     return res.json();
@@ -881,7 +939,7 @@ export class EstforApiClient {
     numToFetch?: string;
     orderBy?: string;
     orderDirection?: string;
-  }): Promise<any> {
+  }): Promise<EstforApiPaginatedResponse<EstforApiPassiveAction>> {
     const query = params ?
       '?' + Object.entries(params)
         .filter(([_, v]) => v !== undefined)
@@ -893,19 +951,19 @@ export class EstforApiClient {
     return res.json();
   }
 
-  async getPassiveActionById(id: string | number): Promise<any> {
+  async getPassiveActionById(id: string | number): Promise<EstforApiPassiveAction> {
     const res = await fetch(`${this.baseUrl}/passive-actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch passive action by id: ${res.status}`);
     return res.json();
   }
 
-  async getQueuedPassiveActionById(id: string | number): Promise<any> {
+  async getQueuedPassiveActionById(id: string | number): Promise<EstforApiQueuedPassiveAction> {
     const res = await fetch(`${this.baseUrl}/queued-passive-actions/${id}`);
     if (!res.ok) throw new Error(`Failed to fetch queued passive action by id: ${res.status}`);
     return res.json();
   }
 
-  async getSubgraphHealth(): Promise<any> {
+  async getSubgraphHealth(): Promise<EstforApiSubgraphHealth> {
     const res = await fetch(`${this.baseUrl}/subgraph-health/`);
     if (!res.ok) throw new Error(`Failed to fetch subgraph health: ${res.status}`);
     return res.json();
