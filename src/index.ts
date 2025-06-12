@@ -60,11 +60,11 @@ export interface EstforApiClientOptions {
  *   const api = new EstforApiClient({ baseUrl: 'http://localhost:4004' });
  *   const actions = await api.getActions();
  */
-export class EstforApiClient {
+export default class EstforApiClient {
   private baseUrl: string;
 
   constructor(options: EstforApiClientOptions = {}) {
-    this.baseUrl = options.baseUrl || 'http://localhost:4004';
+    this.baseUrl = options.baseUrl || 'https://api.estfor.com';
   }
 
   async getActions(params?: {

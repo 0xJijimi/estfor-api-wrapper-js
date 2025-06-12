@@ -1,144 +1,104 @@
 # Estfor API Wrapper Implementation Tasks
 
-## Endpoints
-
-### Actions
-- [x] getActions (GET /actions/)
-- [x] getActionById (GET /actions/{id})
-- [x] getActionChoices (GET /action-choices/{actionId})
-
-### Activities
-- [x] getActivities (GET /activities/)
-- [x] getActivitiesByUser (GET /activities/{userAddress})
-
-### Avatars
-- [x] getAvatars (GET /avatars/)
-
-### Items
-- [x] getItems (GET /items/)
-- [x] getItemById (GET /items/{id})
-
-### Players
-- [x] getPlayers (GET /players/)
-- [x] getPlayerById (GET /players/{id})
-- [x] getPlayersMulti (POST /players/multi)
-
-### Queued Actions
-- [x] getQueuedActions (GET /queued-actions/)
-- [x] getQueuedActionsMulti (POST /queued-actions/multi)
-
-### Shop Items
-- [x] getShopItems (GET /shop-items/)
-- [x] getShopItemById (GET /shop-items/{id})
-
-### User Item NFTs
-- [x] getUserItemNfts (GET /user-item-nfts/{userAddress})
-- [x] getUserItemNftsMulti (POST /user-item-nfts/multi)
-
-### Player Self-Mades
-- [x] getPlayerSelfMades (GET /player-self-mades/{playerId})
-- [x] getPlayerSelfMadesMulti (POST /player-self-mades/multi)
-- [x] getLastFullEquipments (GET /last-full-equipments/{userAddress}/{playerId}/{skill})
-
-### Users
-- [x] getUsers (GET /users/)
-- [x] getUserByAddress (GET /users/{address})
-- [x] getXpThresholdRewards (GET /xp-threshold-rewards/)
-- [x] getRandomWords (GET /random-words/)
-
-### Player Day Data
-- [x] getPlayerDayDatas (GET /player-day-datas/)
-
-### Donation Day Data
-- [x] getDonationDayDatas (GET /donation-day-datas/)
-
-### Clans
-- [x] getClans (GET /clans/)
-- [x] getClanById (GET /clans/{id})
-- [x] getClanMembers (GET /clan-members/)
-- [x] getClanMemberById (GET /clan-members/{id})
-- [x] getClanInvites (GET /clan-invites/)
-- [x] getClanTiers (GET /clan-tiers/)
-- [x] getClanTierById (GET /clan-tiers/{id})
-- [x] getClansWithinVaultMmrAttackingRange (GET /clans-within-vault-mmr-attacking-range/{id})
-
-### Quests
-- [x] getQuests (GET /quests/)
-- [x] getQuestById (GET /quests/{id})
-- [x] getPlayerQuests (GET /player-quests/)
-
-### Core Data
-- [x] getCoreData (GET /core-data/)
-
-### Donations
-- [x] getDonations (GET /donations/)
-
-### Lotteries
-- [x] getLotteries (GET /lotteries/)
-- [x] getLotteryById (GET /lotteries/{id})
-
-### Raffle Entries
-- [x] getRaffleEntries (GET /raffle-entries/)
-- [x] getRaffleEntryById (GET /raffle-entries/{id})
-
-### First to Reach Max Skills
-- [x] getFirstToReachMaxSkills (GET /first-to-reach-max-skills/)
-
-### Instant Actions
-- [x] getInstantActions (GET /instant-actions/)
-- [x] getInstantActionById (GET /instant-actions/{id})
-
-### Promotions
-- [x] getPromotionsById (GET /promotions/{id})
-- [x] getPlayerPromotions (GET /player-promotions/)
-
-### Territories
-- [x] getTerritories (GET /territories/)
-- [x] getTerritoryById (GET /territories/{id})
-
-### Clan Battles
-- [x] getClanBattles (GET /clan-battles/)
-- [x] getClanBattleById (GET /clan-battles/{id})
-
-### Locked Bank Vault Clan Battle Pairs
-- [x] getLockedBankVaultClanBattlePairs (GET /locked-bank-vault-clan-battle-pairs/)
-- [x] getLockedBankVaultClanBattlePairById (GET /locked-bank-vault-clan-battle-pairs/{id})
-
-### Orders
-- [x] getOrders (GET /orders/)
-
-### Failed Orders
-- [x] getFailedOrders (GET /failed-orders/)
-
-### Price Levels
-- [x] getPriceLevels (GET /price-levels/)
-
-### Token Infos
-- [x] getTokenInfos (GET /token-infos/)
-
-### Sale Histories
-- [x] getSaleHistories (GET /sale-histories/)
-
-### Order Book Day Data
-- [x] getOrderBookDayDatas (GET /order-book-day-datas/{tokenId})
-
-### Instant VRF Actions
-- [x] getInstantVrfActions (GET /instant-vrf-actions/)
-- [x] getInstantVrfActionById (GET /instant-vrf-actions/{id})
-- [x] getQueuedInstantVrfActionById (GET /queued-instant-vrf-actions/{id})
-
-### Base Pets
-- [x] getBasePets (GET /base-pets/)
-- [x] getBasePetById (GET /base-pets/{id})
-
-### Pets
-- [x] getPets (GET /pets/)
-- [x] getPetById (GET /pets/{id})
-
-### Passive Actions
-- [x] getPassiveActions (GET /passive-actions/)
-- [x] getPassiveActionById (GET /passive-actions/{id})
-- [x] getQueuedPassiveActionById (GET /queued-passive-actions/{id})
-
-### Subgraph Health
-- [x] getSubgraphHealth (GET /subgraph-health/) 
+## API Endpoints Implementation
+- [x] Actions
+  - [x] GET /actions/
+  - [x] GET /actions/{id}
+  - [x] GET /actions/choices
+- [x] Activities
+  - [x] GET /activities/
+  - [x] GET /activities/user/{userAddress}
+- [x] Avatars
+  - [x] GET /avatars/
+  - [x] GET /avatars/{id}
+- [x] Items
+  - [x] GET /items/
+  - [x] GET /items/{id}
+- [x] Players
+  - [x] GET /players/
+  - [x] GET /players/{id}
+  - [x] POST /players/multi
+- [x] Clans
+  - [x] GET /clans/
+  - [x] GET /clans/{id}
+  - [x] GET /clans/members/{clanId}
+  - [x] GET /clans/invites/{clanId}
+  - [x] GET /clans/tiers
+- [x] Quests
+  - [x] GET /quests/
+  - [x] GET /quests/{id}
+  - [x] GET /quests/player/{playerId}
+- [x] Donations
+  - [x] GET /donations/
+  - [x] GET /donations/user/{userAddress}
+  - [x] GET /donations/day-data
+- [x] Core Data
+  - [x] GET /core-data
+- [x] Users
+  - [x] GET /users/{address}
+- [x] User Items
+  - [x] GET /user-items/{userAddress}
+- [x] XP Threshold Rewards
+  - [x] GET /xp-threshold-rewards/
+- [x] Random Words
+  - [x] GET /random-words/
+- [x] Player Day Data
+  - [x] GET /player-day-data/{playerId}
+- [x] Player Self Made
+  - [x] GET /player-self-made/{playerId}
+- [x] Last Full Equipment
+  - [x] GET /last-full-equipment/{userAddress}
+- [x] Lotteries
+  - [x] GET /lotteries/
+  - [x] GET /lotteries/{id}
+- [x] Raffle Entries
+  - [x] GET /raffle-entries/{lotteryId}
+- [x] First To Reach Max Skills
+  - [x] GET /first-to-reach-max-skills/
+- [x] Instant Actions
+  - [x] GET /instant-actions/
+  - [x] GET /instant-actions/{id}
+- [x] Promotions
+  - [x] GET /promotions/
+  - [x] GET /promotions/{id}
+- [x] Player Promotions
+  - [x] GET /player-promotions/{playerId}
+- [x] Territories
+  - [x] GET /territories/
+  - [x] GET /territories/{id}
+- [x] Clan Battles
+  - [x] GET /clan-battles/
+  - [x] GET /clan-battles/{id}
+- [x] Locked Bank Vault Clan Battle Pairs
+  - [x] GET /locked-bank-vault-clan-battle-pairs/
+- [x] Orders
+  - [x] GET /orders/
+  - [x] GET /orders/{id}
+- [x] Failed Orders
+  - [x] GET /failed-orders/
+- [x] Price Levels
+  - [x] GET /price-levels/
+- [x] Token Info
+  - [x] GET /token-info/
+- [x] Sale History
+  - [x] GET /sale-history/
+- [x] Order Book Day Data
+  - [x] GET /order-book-day-data/
+- [x] Instant VRF Actions
+  - [x] GET /instant-vrf-actions/
+  - [x] GET /instant-vrf-actions/{id}
+- [x] Queued Instant VRF Actions
+  - [x] GET /queued-instant-vrf-actions/{userAddress}
+- [x] Base Pets
+  - [x] GET /base-pets/
+  - [x] GET /base-pets/{id}
+- [x] Pets
+  - [x] GET /pets/
+  - [x] GET /pets/{id}
+- [x] Passive Actions
+  - [x] GET /passive-actions/
+  - [x] GET /passive-actions/{id}
+- [x] Queued Passive Actions
+  - [x] GET /queued-passive-actions/{userAddress}
+- [x] Subgraph Health
+  - [x] GET /subgraph-health

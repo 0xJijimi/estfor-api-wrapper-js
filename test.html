@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstforApiClient Test Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .container {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+        }
+
+        .sidebar {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .main-content {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #0056b3;
+        }
+
+        #result {
+            white-space: pre-wrap;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+            max-height: 500px;
+            overflow-y: auto;
+        }
+
+        .input-group {
+            margin-bottom: 10px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>EstforApiClient Test Page</h1>
+    <div class="container">
+        <div class="sidebar">
+            <div class="input-group">
+                <label for="baseUrl">Base URL:</label>
+                <input type="text" id="baseUrl" value="https://api.estfor.com">
+            </div>
+            <h3>Actions</h3>
+            <button onclick="getActions()">Get Actions</button>
+            <div class="input-group">
+                <label for="actionId">Action ID:</label>
+                <input type="text" id="actionId">
+            </div>
+            <button onclick="getActionById()">Get Action by ID</button>
+            <button onclick="getActionChoices()">Get Action Choices</button>
+
+            <h3>Activities</h3>
+            <button onclick="getActivities()">Get Activities</button>
+            <div class="input-group">
+                <label for="userAddress">User Address:</label>
+                <input type="text" id="userAddress">
+            </div>
+            <button onclick="getActivitiesByUser()">Get Activities by User</button>
+
+            <h3>Other</h3>
+            <button onclick="getAvatars()">Get Avatars</button>
+            <button onclick="getCoreData()">Get Core Data</button>
+            <button onclick="getTerritories()">Get Territories</button>
+            <button onclick="getPriceLevels()">Get Price Levels</button>
+        </div>
+        <div class="main-content">
+            <h2>Response</h2>
+            <div id="result">Results will appear here...</div>
+        </div>
+    </div>
+
+    <script src="dist/bundle.js"></script>
+    <script>
+        let api;
+
+        // Initialize the API client after all scripts are loaded
+        window.addEventListener('load', function () {
+            if (typeof EstforApiClient === 'undefined') {
+                displayResult({ error: 'Failed to load EstforApiClient. Please check the console for errors.' });
+                return;
+            }
+            try {
+                api = new EstforApiClient();
+                console.log('API client initialized successfully');
+            } catch (error) {
+                console.error('Failed to initialize API client:', error);
+                displayResult({ error: 'Failed to initialize API client: ' + error.message });
+            }
+        });
+
+        function updateBaseUrl() {
+            const baseUrl = document.getElementById('baseUrl').value;
+            if (api) {
+                api.baseUrl = baseUrl;
+            }
+        }
+
+        async function displayResult(data) {
+            const resultDiv = document.getElementById('result');
+            resultDiv.textContent = JSON.stringify(data, null, 2);
+        }
+
+        async function getActions() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getActions();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getActionById() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const id = document.getElementById('actionId').value;
+                if (!id) {
+                    displayResult({ error: 'Please enter an Action ID' });
+                    return;
+                }
+                const result = await api.getActionById(id);
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getActionChoices() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const id = document.getElementById('actionId').value;
+                if (!id) {
+                    displayResult({ error: 'Please enter an Action ID' });
+                    return;
+                }
+                const result = await api.getActionChoices(id);
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getActivities() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getActivities();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getActivitiesByUser() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const userAddress = document.getElementById('userAddress').value;
+                if (!userAddress) {
+                    displayResult({ error: 'Please enter a User Address' });
+                    return;
+                }
+                const result = await api.getActivitiesByUser(userAddress);
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getAvatars() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getAvatars();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getCoreData() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getCoreData();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getTerritories() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getTerritories();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+
+        async function getPriceLevels() {
+            try {
+                if (!api) {
+                    displayResult({ error: 'API client not initialized yet. Please wait a moment and try again.' });
+                    return;
+                }
+                updateBaseUrl();
+                const result = await api.getPriceLevels();
+                displayResult(result);
+            } catch (error) {
+                displayResult({ error: error.message });
+            }
+        }
+    </script>
+</body>
+
+</html>
